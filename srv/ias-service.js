@@ -4,7 +4,9 @@ module.exports = (srv) => {
 
     srv.on('duplicatedUsers', async req => {
 
-        console.log('duplicatedUsers triggered...');
+        console.log('service triggered...');
+        console.log('call get api...');
+
         try {
             let getResponseIAS = await executeHttpRequest(
                 {
@@ -18,20 +20,26 @@ module.exports = (srv) => {
                     //url: "/Users",
                     headers: {
                         "Content-Type": "application/scim+json; charset=utf-8"
+                    },
+                    params: {
+                        "attributes": "urn:sap:cloud:scim:schemas:extension:custom:2.0:User"
                     }
                 }
             );
 
-            let data = getResponseIAS.data.Resources;
-            let aResponse = [];
-            data.forEach(element => {
-                console.log('ID:', element.id);
-                console.log('Username:', element.userName);
-                console.log('Active:', element.active);
-                aResponse.push({ id: element.id, userName: element.userName, active: element.active });
+            let oResources = getResponseIAS.data.Resources;
+            let aUsersToCheck = [];
+
+            oResources.forEach(user => {
+                console.log('ID:', user.id);
+                console.log('Username:', user.userName);
+                console.log('Active:', user.active);
+                if (user.userName) {
+                    aUsersToCheck.push({ id: user.id, userName: user.userName, active: user.active });
+                }
             });
-            //console.log(data);
-            return aResponse;
+
+            return aUsersToCheck;
 
             /* let lt_proc_users = [];
             let lt_proc_users_upd = [];
