@@ -33,9 +33,8 @@ module.exports = (srv) => {
             oResources.forEach(user => {
                 console.log('ID:', user.id);
                 console.log('Username:', user.userName);
-                console.log('Active:', user.active);
                 if (user.userName) {
-                    aUsersToCheck.push({ id: user.id, userName: user.userName, active: user.active });
+                    aUsersToCheck.push({ id: user.id, userName: user.userName });
                 }
             });
 
