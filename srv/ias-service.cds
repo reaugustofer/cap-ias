@@ -1,9 +1,14 @@
 service FindDuplicateIAS {
 
-    entity dupUsers {
-        id       : String;
-        userName : String;
+    entity userData {
+        id          : String;
+        userName    : String;
+        email       : String;
+        customAttr1 : String;
+        customAttr2 : String;
+        customAttr3 : String;
+        customAttr4 : String;
     }
 
-    function duplicatedUsers() returns array of dupUsers;
+    function handleDuplicatedUsers() returns array of userData;
 }

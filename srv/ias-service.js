@@ -2,13 +2,10 @@ const { executeHttpRequest } = require("@sap-cloud-sdk/http-client");
 
 module.exports = (srv) => {
 
-    srv.on('duplicatedUsers', async req => {
-
-        console.log('service triggered...');
-        console.log('call get api...');
+    srv.on('handleDuplicatedUsers', async req => {
 
         try {
-            let getResponseIAS = await executeHttpRequest(
+            let usersIAS = await executeHttpRequest(
                 {
                     //destinationName: "NumenIAS",
                     url: "https://a2ktkozpw.accounts.ondemand.com/scim/Users",
@@ -20,25 +17,33 @@ module.exports = (srv) => {
                     //url: "/Users",
                     headers: {
                         "Content-Type": "application/scim+json; charset=utf-8"
-                    },
-                    params: {
-                        "attributes": "urn:sap:cloud:scim:schemas:extension:custom:2.0:User"
                     }
                 }
             );
 
-            let oResources = getResponseIAS.data.Resources;
-            let aUsersToCheck = [];
+            let oResources = usersIAS.data.Resources;
+            let aUsersToBeChk = getUsersToCheck(oResources);
+            let aUsersCustomId = buildUsersCustomId(aUsersToBeChk);
+            let aUsersToBeUpd = buildUsersToBeUpd(aUsersCustomId, aUsersToBeChk);
+            return aUsersToBeUpd;
 
-            oResources.forEach(user => {
-                console.log('ID:', user.id);
-                console.log('Username:', user.userName);
-                if (user.userName) {
-                    aUsersToCheck.push({ id: user.id, userName: user.userName });
-                }
-            });
 
-            return aUsersToCheck;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             /* let lt_proc_users = [];
             let lt_proc_users_upd = [];
@@ -199,4 +204,51 @@ module.exports = (srv) => {
         }
     }
     )
+
+    function getUsersToCheck(UsersIAS) {
+        let aUsers = [];
+        let aCustomAttr = [];
+        let sEmail;
+
+        UsersIAS.forEach(user => {
+            aCustomAttr = user["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"];
+            sEmail = user["emails"];
+            if (user.userName && aCustomAttr != undefined) {
+                let oCustAttr1 = aCustomAttr.attributes.find(attr => attr.name == "customAttribute1");
+                let oCustAttr2 = aCustomAttr.attributes.find(attr => attr.name == "customAttribute2");
+                let oCustAttr3 = aCustomAttr.attributes.find(attr => attr.name == "customAttribute3");
+                let oCustAttr4 = aCustomAttr.attributes.find(attr => attr.name == "customAttribute4");
+                aUsers.push({
+                    id: user.id,
+                    userName: user.userName,
+                    email: sEmail.length > 0 ? sEmail[0].value : undefined,
+                    customAttr1: oCustAttr1 != undefined ? oCustAttr1["value"] : null,
+                    customAttr2: oCustAttr2 != undefined ? oCustAttr2["value"] : null,
+                    customAttr3: oCustAttr3 != undefined ? oCustAttr3["value"] : null,
+                    customAttr4: oCustAttr4 != undefined ? oCustAttr4["value"] : null
+                });
+            }
+        });
+        return aUsers;
+    }
+
+    function buildUsersCustomId(UsersIAS) {
+        let aUsers = UsersIAS;
+        aUsers.forEach(user => {
+            user.customAttr3 = user.customAttr1 + user.customAttr2;
+            user.customAttr4 = null;
+        });
+        return aUsers;
+    }
+
+    function buildUsersToBeUpd(UsersToBeUpd, CurrentUsers) {
+        let aMainListIds = removeDuplicateIds(UsersToBeUpd);
+        return aMainListIds;
+    }
+
+    function removeDuplicateIds(IdList) {
+        // make a especific list with customattr3 field, then using this in filter operator
+        return IdList.filter((list, index) => IdList.indexOf(list.customAttr3) === index);
+    }
+
 }
