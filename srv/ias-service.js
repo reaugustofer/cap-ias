@@ -9,14 +9,11 @@ module.exports = (srv) => {
         try {
             let usersIAS = await executeHttpRequest(
                 {
-                    //destinationName: "NumenIAS",
-                    url: "https://a2ktkozpw.accounts.ondemand.com/scim/Users",
-                    username: 'renato.bonini@numenit.com',
-                    password: 'GandalfWill01@',
+                    destinationName: "NumenIAS",
                 },
                 {
                     method: "get",
-                    //url: "/Users",
+                    url: "/Users",
                     headers: {
                         "Content-Type": "application/scim+json; charset=utf-8"
                     }
@@ -26,15 +23,12 @@ module.exports = (srv) => {
             let oResources = usersIAS.data.Resources;
             let aUsersToUpdate = handleDuplicatedUsers(oResources);
 
-            // -----> update ias user with new customAttribute values
+            // -----> update each ias user with new customAttribute values
             aUsersToUpdate.forEach(async userUpd => {
                 try {
                     let updUserIAS = await executeHttpRequest(
                         {
-                            //destinationName: "NumenIAS",
-                            url: "https://a2ktkozpw.accounts.ondemand.com/scim",
-                            username: 'renato.bonini@numenit.com',
-                            password: 'GandalfWill01@',
+                            destinationName: "NumenIAS",
                         },
                         {
                             method: "patch",
