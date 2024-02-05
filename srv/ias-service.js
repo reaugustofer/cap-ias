@@ -2,6 +2,7 @@ const { executeHttpRequest } = require("@sap-cloud-sdk/http-client");
 
 module.exports = (srv) => {
 
+    // -----> handleDuplicatedUsers()
     srv.on('handleDuplicatedUsers', async req => {
 
         // -----> get ias user to be processed
