@@ -39,6 +39,11 @@ File or Folder | Purpose
 	10. Finish :)
 
 
+# Run
+
+:fire: http://<host>:<port>/find-duplicate-ias/handleDuplicatedUsers()
+
+
 ## Next Steps
 
 - Open a new terminal and run `cds watch` 
