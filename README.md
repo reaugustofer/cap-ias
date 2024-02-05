@@ -1,3 +1,15 @@
+# Objective
+
+Update IAS user with new custom attributes values, like below:
+
+Custom Attribute | Value
+-------------------- | ------------------
+`customAttribute1` | R
+`customAttribute2` | DEMO
+`customAttribute3` | RDEMO (1,2,3...)
+`customAttribute4` | 0 (1,2,3..)
+
+
 # Getting Started
 
 Welcome to your new project.
@@ -11,18 +23,6 @@ File or Folder | Purpose
 `srv/` | your service models and code go here
 `package.json` | project metadata and configuration
 `readme.md` | this getting started guide
-
-
-# Objective
-
-Update IAS user with new custom attributes values, like below:
-
-Custom Attribute | Value
--------------------- | ------------------
-`customAttribute1` | R
-`customAttribute2` | DEMO
-`customAttribute3` | RDEMO (1,2,3...)
-`customAttribute4` | 0 (1,2,3..)
 
 
 # Flow Logic
