@@ -41,7 +41,7 @@ File or Folder | Purpose
 
 # Run
 
-:fire: http://<host>:<port>/find-duplicate-ias/handleDuplicatedUsers()
+:fire: /find-duplicate-ias/handleDuplicatedUsers()
 
 
 ## Next Steps
