@@ -13,6 +13,31 @@ File or Folder | Purpose
 `readme.md` | this getting started guide
 
 
+# Objective
+
+Update IAS user with new custom attributes values, like below:
+--- customAttribute1: R
+--- customAttribute2: DEMO
+--- customAttribute3: RDEMO
+--- customAttribute4: 0
+
+
+# Flow Logic
+
+	1. Get users list from IAS
+	2. Filter only userName is filled
+	3. Filter only customAttrs is filled (user["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"])
+	4. Order by created at (backend handle)
+	
+--- For each element
+	5. Build user id with customAttrs like tomorrow doesn't exists (attr3 = attr1 + attr2)
+	6. Make a list with all attr3 created previously
+	7. Iterate this list then iterate main list where attr3 = attr3 
+	8. Increment attr3 then fill attr4 too
+	9. Prepare post payload
+	10. Finish :)
+
+
 ## Next Steps
 
 - Open a new terminal and run `cds watch` 
