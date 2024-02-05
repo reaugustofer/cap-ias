@@ -16,10 +16,13 @@ File or Folder | Purpose
 # Objective
 
 Update IAS user with new custom attributes values, like below:
---- customAttribute1: R
---- customAttribute2: DEMO
---- customAttribute3: RDEMO
---- customAttribute4: 0
+
+Custom Attribute | Value
+-------------------- | ------------------
+`customAttribute1` | R
+`customAttribute2` | DEMO
+`customAttribute3` | RDEMO (1,2,3...)
+`customAttribute4` | 0 (1,2,3..)
 
 
 # Flow Logic
@@ -28,8 +31,6 @@ Update IAS user with new custom attributes values, like below:
 	2. Filter only userName is filled
 	3. Filter only customAttrs is filled (user["urn:sap:cloud:scim:schemas:extension:custom:2.0:User"])
 	4. Order by created at (backend handle)
-	
---- For each element
 	5. Build user id with customAttrs like tomorrow doesn't exists (attr3 = attr1 + attr2)
 	6. Make a list with all attr3 created previously
 	7. Iterate this list then iterate main list where attr3 = attr3 
