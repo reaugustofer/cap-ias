@@ -6,27 +6,33 @@ module.exports = (srv) => {
     srv.on('handleDuplicatedUsers', async req => {
 
         // -----> get ias user to be processed
-        try {
-            let usersIAS = await executeHttpRequest(
-                {
-                    destinationName: "NumenIAS",
-                },
-                {
-                    method: "get",
-                    url: "/Users",
-                    headers: {
-                        "Content-Type": "application/scim+json; charset=utf-8"
-                    }
+        let usersIAS = await executeHttpRequest(
+            {
+                destinationName: "NumenIAS",
+            },
+            {
+                method: "get",
+                url: "/Users",
+                headers: {
+                    "Content-Type": "application/scim+json; charset=utf-8"
                 }
-            );
+            }
+        ).then(response => {
+            return response.data.Resources;
+        }).catch(error => {
+            console.log('error on api call (get)');
+            console.log(error);
+        });
 
-            let oResources = usersIAS.data.Resources;
-            let aUsersToUpdate = handleDuplicatedUsers(oResources);
+        // -----> update each ias user with new customAttribute values
+        if (usersIAS != undefined) {
 
-            // -----> update each ias user with new customAttribute values
-            aUsersToUpdate.forEach(async userUpd => {
+            let aUpdatedUsers = [];
+            let aUsersToUpdate = handleDuplicatedUsers(usersIAS);
+
+            aUsersToUpdate.forEach(userUpd => {
                 try {
-                    let updUserIAS = await executeHttpRequest(
+                    let updUserIAS = executeHttpRequest(
                         {
                             destinationName: "NumenIAS",
                         },
@@ -56,18 +62,19 @@ module.exports = (srv) => {
                                 ]
                             }
                         }
-                    );
+                    )
+                    aUpdatedUsers.push(userUpd);
+                    console.log('user updated data:', userUpd);
                 } catch (error) {
                     console.log('error on api call (patch), id:', userUpd.id);
                     console.log(error);
                 }
-            });
+            })
 
-        } catch (error) {
-            console.log('error on api call (get)');
-            console.log(error);
+            return aUpdatedUsers;
         }
-    })
+
+    }) // ----> handleDuplicated
 
     function handleDuplicatedUsers(UsersIAS) {
         let aUsersToBeChk = getUsersToCheck(UsersIAS);
@@ -120,7 +127,7 @@ module.exports = (srv) => {
             aUsersToBeUpd.forEach(user => {
                 if (user.customAttr3 == id) {
                     user.customAttr3 += iCont == 0 ? "" : iCont;
-                    user.customAttr4 = iCont;
+                    user.customAttr4 = iCont.toString();
                     iCont++;
                 }
             })
@@ -133,4 +140,4 @@ module.exports = (srv) => {
         return aFilteredList.filter((list, index) => aFilteredList.indexOf(list) === index);
     }
 
-}
+} // ----> module exports

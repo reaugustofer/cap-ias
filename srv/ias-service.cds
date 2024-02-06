@@ -1,6 +1,6 @@
-service FindDuplicateIAS {
+service HandleDuplicateUsersIAS {
 
-    entity userData {
+    entity updatedUsers {
         id          : String;
         userName    : String;
         email       : String;
@@ -10,5 +10,5 @@ service FindDuplicateIAS {
         customAttr4 : String;
     }
 
-    function handleDuplicatedUsers() returns array of userData;
+    function handleDuplicatedUsers() returns array of updatedUsers;
 }
