@@ -30,6 +30,7 @@ module.exports = (srv) => {
             let aUpdatedUsers = [];
             let aUsersToUpdate = handleDuplicatedUsers(usersIAS);
 
+            // -----> sync call for each element, then fill return array
             aUsersToUpdate.forEach(userUpd => {
                 try {
                     let updUserIAS = executeHttpRequest(
